@@ -1,0 +1,188 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Stock Calculator</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700&family=Noto+Sans+KR:wght@400;500;700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="popup.css" />
+  </head>
+  <body>
+    <div class="app">
+      <header>
+        <div class="logo">
+          <span class="logo-icon">📈</span>
+          <span class="logo-text">Stock Calculator</span>
+        </div>
+      </header>
+
+      <main>
+        <section class="input-section">
+          <button
+            type="button"
+            class="reset-btn"
+            id="resetBtn"
+            title="Clear inputs"
+            aria-label="Clear inputs"
+          >
+            Clear
+          </button>
+
+          <!-- Buy Price -->
+          <div class="field">
+            <label for="buyPrice"
+              >Buy Price <span class="unit-tag">$</span></label
+            >
+            <div class="input-wrap">
+              <span class="prefix">$</span>
+              <input
+                type="number"
+                id="buyPrice"
+                placeholder="0.00"
+                min="0"
+                step="0.01"
+              />
+            </div>
+          </div>
+
+          <!-- Quick picks -->
+          <div class="quick-inline">
+            <button class="qi negative" data-val="-10">-10%</button>
+            <button class="qi negative" data-val="-5">-5%</button>
+            <button class="qi negative" data-val="-3">-3%</button>
+            <button class="qi negative" data-val="-1">-1%</button>
+            <button class="qi positive" data-val="1">+1%</button>
+            <button class="qi positive" data-val="3">+3%</button>
+            <button class="qi positive" data-val="5">+5%</button>
+            <button class="qi positive" data-val="10">+10%</button>
+          </div>
+
+          <!-- Change ⇄ Target -->
+          <div class="row-two">
+            <div class="field half">
+              <label for="pctInput"
+                >Change <span class="unit-tag">%</span></label
+              >
+              <div class="input-wrap">
+                <div class="sign-toggle" aria-label="Change direction">
+                  <button
+                    type="button"
+                    class="sign-btn positive active"
+                    id="signPlusBtn"
+                    aria-pressed="true"
+                  >
+                    +
+                  </button>
+                  <button
+                    type="button"
+                    class="sign-btn negative"
+                    id="signMinusBtn"
+                    aria-pressed="false"
+                  >
+                    −
+                  </button>
+                </div>
+                <input
+                  type="number"
+                  id="pctInput"
+                  placeholder="0.00"
+                  min="0"
+                  step="0.01"
+                />
+              </div>
+            </div>
+            <div class="divider-arrow">⇄</div>
+            <div class="field half">
+              <label for="targetPrice"
+                >Target <span class="unit-tag">$</span></label
+              >
+              <div class="input-wrap">
+                <span class="prefix">$</span>
+                <input
+                  type="number"
+                  id="targetPrice"
+                  placeholder="0.00"
+                  min="0"
+                  step="0.01"
+                />
+              </div>
+            </div>
+          </div>
+
+          <!-- Fee row -->
+          <div class="fee-row">
+            <label class="fee-label"> Fee </label>
+            <div class="fee-presets">
+              <button class="fee-preset active" data-fee="0.025">0.025%</button>
+              <button class="fee-preset" data-fee="0.1">0.1%</button>
+              <button class="fee-preset" data-fee="0.5">0.5%</button>
+              <button class="fee-preset" data-fee="1.0">1.0%</button>
+            </div>
+            <div class="fee-custom-wrap">
+              <input
+                type="number"
+                id="feeInput"
+                value="0.025"
+                min="0"
+                max="10"
+                step="0.001"
+              />
+              <span class="fee-pct-sym">%</span>
+            </div>
+          </div>
+        </section>
+
+        <!-- Results -->
+        <section class="result-section">
+          <div class="result-card" id="resultCard">
+            <div class="result-top">
+              <div class="res-block">
+                <div class="res-label">Return</div>
+                <div class="res-val main" id="resPct">—</div>
+              </div>
+              <div class="res-divider-v"></div>
+              <div class="res-block">
+                <div class="res-label">Net Profit</div>
+                <div class="res-val main" id="netProfit">—</div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- Key levels table -->
+        <section class="multi-section">
+          <button class="toggle-btn" id="toggleMulti">
+            <span>View key levels</span>
+            <span class="arrow">▾</span>
+          </button>
+          <div class="multi-table" id="multiTable" style="display: none">
+            <table>
+              <thead>
+                <tr>
+                  <th>Change</th>
+                  <th>Target</th>
+                  <th>Change ($)</th>
+                  <th>Net Profit</th>
+                </tr>
+              </thead>
+              <tbody id="multiBody"></tbody>
+            </table>
+          </div>
+        </section>
+      </main>
+
+      <footer>
+        <span
+          >Fee-inclusive target &nbsp;·&nbsp; Bidirectional input
+          supported</span
+        >
+      </footer>
+    </div>
+
+    <script src="popup.js"></script>
+  </body>
+</html>
