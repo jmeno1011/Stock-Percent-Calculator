@@ -4,6 +4,12 @@
 
 매수가와 목표 수익률을 입력하면 수수료가 반영된 목표가를 계산하고, 반대로 목표가를 입력하면 실제 수익률을 계산합니다. 입력값은 Chrome 로컬 스토리지에 저장되어 팝업을 다시 열어도 유지됩니다.
 
+![Stock Percent Calculator marquee](store-assets/marquee-promo-tile-1400x560.png)
+
+## 스크린샷
+
+![Stock Percent Calculator screenshot](store-assets/screenshot-1280x800.png)
+
 ## 주요 기능
 
 - 매수가 기준 목표 수익률 계산
@@ -61,6 +67,10 @@
 ├── icon16.png           # 확장 아이콘
 ├── icon48.png
 ├── icon128.png
+├── store-assets/        # README 및 Chrome Web Store용 이미지
+│   ├── marquee-promo-tile-1400x560.png
+│   ├── screenshot-1280x800.png
+│   └── small-promo-tile-440x280.png
 └── test/
     └── popup.test.mjs   # Node 기반 동작 테스트
 ```
