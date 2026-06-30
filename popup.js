@@ -1,11 +1,12 @@
 // ── State ──
 const DEFAULT_FEE = '0.025';
-const STORAGE_KEYS = ['buyPrice', 'pct', 'target', 'sign', 'lastEdited', 'fee'];
+const STORAGE_KEYS = ['buyPrice', 'quantity', 'pct', 'target', 'sign', 'lastEdited', 'fee'];
 let sign = 1;
 let lastEdited = null; // 'pct' | 'target'
 
 // ── DOM ──
 const buyEl       = document.getElementById('buyPrice');
+const quantityEl  = document.getElementById('quantityInput');
 const pctEl       = document.getElementById('pctInput');
 const targetEl    = document.getElementById('targetPrice');
 const resetBtn    = document.getElementById('resetBtn');
@@ -34,6 +35,11 @@ function fmtPct(n) {
 function getFee() {
   const v = parseFloat(feeInput.value);
   return isNaN(v) || v < 0 ? 0 : v;
+}
+
+function getQuantity() {
+  const v = parseFloat(quantityEl.value);
+  return isNaN(v) || v <= 0 ? 1 : v;
 }
 
 function getFeeAdjustedPct(effectivePct, fee) {
@@ -79,7 +85,7 @@ function compute() {
 
   const diff    = tgt - buy;
   const feeIncluded = buy * fee / 100;
-  const net     = getNetProfit(diff, feeIncluded);
+  const net     = getNetProfit(diff, feeIncluded) * getQuantity();
 
   const isUp = effectivePct >= 0;
   resCard.className = 'result-card ' + (isUp ? 'up' : 'down');
@@ -103,6 +109,7 @@ function saveAll() {
   if (typeof chrome === 'undefined' || !chrome.storage) return;
   chrome.storage.local.set({
     buyPrice:   buyEl.value,
+    quantity:   quantityEl.value,
     pct:        pctEl.value,
     target:     targetEl.value,
     sign:       sign,
@@ -119,6 +126,7 @@ function clearSaved() {
   }
   chrome.storage.local.set({
     buyPrice: '',
+    quantity: '',
     pct: '',
     target: '',
     sign: 1,
@@ -152,6 +160,7 @@ signMinusBtn.addEventListener('click', () => setSign(-1));
 
 resetBtn.addEventListener('click', () => {
   buyEl.value = '';
+  quantityEl.value = '';
   pctEl.value = '';
   targetEl.value = '';
   feeInput.value = DEFAULT_FEE;
@@ -169,6 +178,7 @@ resetBtn.addEventListener('click', () => {
 
 // ── Input events ──
 buyEl.addEventListener('input', computeAndSave);
+quantityEl.addEventListener('input', computeAndSave);
 pctEl.addEventListener('input', () => {
   lastEdited = 'pct';
   document.querySelectorAll('.qi').forEach(b => b.classList.remove('active'));
@@ -217,13 +227,14 @@ document.querySelectorAll('.fee-preset').forEach(btn => {
 function updateMultiTable(buy) {
   const pcts = [-15, -10, -7, -5, -3, -1, 1, 3, 5, 7, 10, 15];
   const fee  = getFee();
+  const quantity = getQuantity();
   const currentPct = lastEdited ? parseFloat(pctEl.value) * sign : null;
   multiBody.innerHTML = '';
   pcts.forEach(p => {
     const tgt     = buy * (1 + getFeeAdjustedPct(p, fee) / 100);
     const diff    = tgt - buy;
     const feeIncluded = buy * fee / 100;
-    const net     = getNetProfit(diff, feeIncluded);
+    const net     = getNetProfit(diff, feeIncluded) * quantity;
     const isUp    = p > 0;
     const isCur   = currentPct !== null && Math.abs(currentPct - p) < 0.01;
     const tr = document.createElement('tr');
@@ -248,6 +259,7 @@ toggleMulti.addEventListener('click', () => {
 if (typeof chrome !== 'undefined' && chrome.storage) {
   chrome.storage.local.get(STORAGE_KEYS, (res) => {
     if (res.buyPrice)        buyEl.value    = res.buyPrice;
+    if (res.quantity)        quantityEl.value = res.quantity;
     if (res.pct)             pctEl.value    = res.pct;
     if (res.target)          targetEl.value = res.target;
     if (res.sign !== undefined) { sign = res.sign; updateSignBtns(); }
@@ -263,6 +275,7 @@ if (typeof chrome !== 'undefined' && chrome.storage) {
 }
 
 buyEl.addEventListener('change', saveAll);
+quantityEl.addEventListener('change', saveAll);
 pctEl.addEventListener('change', saveAll);
 targetEl.addEventListener('change', saveAll);
 feeInput.addEventListener('change', saveAll);

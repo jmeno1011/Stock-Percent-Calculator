@@ -33,6 +33,7 @@ function makeElement(id, value = '') {
 function loadPopup({ chrome } = {}) {
   const ids = [
     'buyPrice',
+    'quantityInput',
     'pctInput',
     'targetPrice',
     'resetBtn',
@@ -68,6 +69,8 @@ function loadPopup({ chrome } = {}) {
 
   assert.match(html, /Return/);
   assert.match(html, /Net Profit/);
+  assert.match(html, /id="quantityInput"/);
+  assert.match(html, /Quantity/);
   assert.doesNotMatch(html, /id="resDiff"/);
   assert.doesNotMatch(html, /id="resDir"/);
   assert.doesNotMatch(html, /id="feeCostOne"/);
@@ -100,11 +103,23 @@ function loadPopup({ chrome } = {}) {
   const { elements } = loadPopup();
 
   elements.buyPrice.value = '100';
+  elements.quantityInput.value = '10';
   elements.pctInput.value = '1';
   elements.pctInput.listeners.input();
 
   assert.equal(elements.targetPrice.value, '101.03');
   assert.equal(elements.resPct.textContent, '+1.00%');
+  assert.equal(elements.netProfit.textContent, '+$10.00');
+}
+
+{
+  const { elements } = loadPopup();
+
+  elements.buyPrice.value = '100';
+  elements.quantityInput.value = '0';
+  elements.pctInput.value = '1';
+  elements.pctInput.listeners.input();
+
   assert.equal(elements.netProfit.textContent, '+$1.00');
 }
 
@@ -165,10 +180,13 @@ function loadPopup({ chrome } = {}) {
 
   elements.buyPrice.value = '10.92';
   elements.buyPrice.listeners.input();
+  elements.quantityInput.value = '7';
+  elements.quantityInput.listeners.input();
   elements.pctInput.value = '5';
   elements.pctInput.listeners.input();
 
   assert.equal(saved.buyPrice, '10.92');
+  assert.equal(saved.quantity, '7');
   assert.equal(saved.pct, '5');
   assert.equal(saved.target, '11.47');
   assert.equal(saved.lastEdited, 'pct');
@@ -184,6 +202,7 @@ function loadPopup({ chrome } = {}) {
               buyPrice: '10.92',
               pct: '5',
               target: '10.37',
+              quantity: '3',
               sign: -1,
               lastEdited: 'pct',
               fee: '0.025',
@@ -198,8 +217,9 @@ function loadPopup({ chrome } = {}) {
   assert.equal(elements.buyPrice.value, '10.92');
   assert.equal(elements.pctInput.value, '5');
   assert.equal(elements.targetPrice.value, '10.37');
+  assert.equal(elements.quantityInput.value, '3');
   assert.equal(elements.feeInput.value, '0.025');
-  assert.equal(elements.resPct.textContent, '−5.00%');
+  assert.equal(elements.netProfit.textContent, '−$1.64');
 }
 
 {
@@ -221,6 +241,7 @@ function loadPopup({ chrome } = {}) {
   });
 
   elements.buyPrice.value = '223.46';
+  elements.quantityInput.value = '4';
   elements.pctInput.value = '2';
   elements.targetPrice.value = '228.38';
   elements.feeInput.value = '0.2';
@@ -228,11 +249,12 @@ function loadPopup({ chrome } = {}) {
   elements.resetBtn.listeners.click();
 
   assert.equal(elements.buyPrice.value, '');
+  assert.equal(elements.quantityInput.value, '');
   assert.equal(elements.pctInput.value, '');
   assert.equal(elements.targetPrice.value, '');
   assert.equal(elements.feeInput.value, '0.025');
   assert.equal(elements.resPct.textContent, '—');
   assert.equal(elements.netProfit.textContent, '—');
   assert.equal(elements.signPlusBtn['aria-pressed'], 'true');
-  assert.deepEqual(Array.from(removed), ['buyPrice', 'pct', 'target', 'sign', 'lastEdited', 'fee']);
+  assert.deepEqual(Array.from(removed), ['buyPrice', 'quantity', 'pct', 'target', 'sign', 'lastEdited', 'fee']);
 }

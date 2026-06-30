@@ -14,6 +14,7 @@ Enter a buy price and target return rate to calculate the fee-inclusive target p
 
 - Calculate a target price from a buy price and desired return rate
 - Reverse-calculate the actual return rate from a target price
+- Enter a position quantity to calculate total net profit
 - Switch between upward and downward price movement
 - Quick return buttons for `-10%`, `-5%`, `-3%`, `-1%`, `+1%`, `+3%`, `+5%`, and `+10%`
 - Default `0.025%` fee with selectable fee presets
@@ -34,11 +35,12 @@ Enter a buy price and target return rate to calculate the fee-inclusive target p
 
 1. Enter your buy price in `Buy Price`.
 2. Enter the desired return rate in `Change`, or use one of the quick return buttons.
-3. Check the calculated `Target` price and `Net Profit`.
-4. Enter a target price directly to reverse-calculate `Change`.
-5. Choose a fee preset in `Fee`, or enter a custom fee rate.
-6. Open `View key levels` to see target prices for common return levels.
-7. Click `Clear` to reset the inputs and saved values.
+3. Enter your share count in `Quantity` to calculate total net profit.
+4. Check the calculated `Target` price and `Net Profit`.
+5. Enter a target price directly to reverse-calculate `Change`.
+6. Choose a fee preset in `Fee`, or enter a custom fee rate.
+7. Open `View key levels` to see target prices for common return levels.
+8. Click `Clear` to reset the inputs and saved values.
 
 ## Calculation
 
@@ -54,7 +56,7 @@ When entering a target price:
 displayed return rate = ((target price - buy price) / buy price * 100) - directional fee rate
 ```
 
-Net profit is shown after applying the fee amount based on the buy price.
+Net profit is shown after applying the fee amount based on the buy price. If a quantity is entered, net profit is multiplied by that quantity.
 
 ## Project Structure
 
